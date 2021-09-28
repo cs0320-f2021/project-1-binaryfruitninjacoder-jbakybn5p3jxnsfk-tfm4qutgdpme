@@ -1,0 +1,8 @@
+INPUT
+stars data/stars/three-star.csv
+naive_neighbors 5 "Star One"
+OUTPUT
+Read 3 stars from data/stars/three-star.csv
+2
+3
+END

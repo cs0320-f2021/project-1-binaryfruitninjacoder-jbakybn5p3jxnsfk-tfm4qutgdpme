@@ -1,0 +1,6 @@
+INPUT
+stars data/stars/bad.csv
+naive_neighbors 5 "Star"
+OUTPUT
+ERROR:
+END
