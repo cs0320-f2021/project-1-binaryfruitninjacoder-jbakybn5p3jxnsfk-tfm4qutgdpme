@@ -38,7 +38,10 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) {
+//    Repl repl = new Repl();
+//    repl.run(?);
     new Main(args).run();
+
   }
 
   private String[] args;
@@ -88,6 +91,8 @@ public final class Main {
 
     MathBot mathbot = new MathBot();
     starHandler starhandler = new starHandler();
+    Database database = new Database("/vagrant/project-1-binaryfruitninjacoder-jbakybn5p3jxnsfk-tfm4qutgdpme/data/project-1/runwaySMALL.sqlite3");
+    userHandler userHandler = new userHandler();
 
 
     // use "--port <n>" to specify what port on which the server runs
@@ -141,6 +146,13 @@ public final class Main {
           } else if (arguments[0].equals("naive_neighbors") && isInteger(arguments[1])) {
             starhandler.naive_neighborsByName(Integer.parseInt(arguments[1]),
                 (arguments[2].replace("\"", "")));
+          }
+//          else if (arguments.length == 2 && arguments[0].equals("database") && isPath(arguments[1])) {
+//            userHandler.user(arguments[1])//connetion can be a static object ...
+//          }
+          else if (arguments.length == 1 && arguments[0].equals("insertMandy")) {
+            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            database.insert(Mandy);
           }
           //when an incorrect command is typed
           else {
