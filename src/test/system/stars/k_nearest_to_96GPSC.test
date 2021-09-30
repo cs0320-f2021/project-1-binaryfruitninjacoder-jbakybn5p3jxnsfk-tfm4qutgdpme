@@ -1,9 +1,0 @@
-INPUT
-stars data/stars/ten-star.csv
-naive_neighbors 3 "96 G. Psc"
-OUTPUT
-Read 10 stars from data/stars/ten-star.csv
-0
-87666
-70667
-END

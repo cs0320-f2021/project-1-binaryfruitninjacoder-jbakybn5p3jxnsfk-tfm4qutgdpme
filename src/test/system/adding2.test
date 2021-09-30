@@ -1,9 +1,0 @@
-ARGS
-
-INPUT
-add 9.055 2.76
-subtract 11.01 131.22
-OUTPUT
-11.815
--120.21
-END
