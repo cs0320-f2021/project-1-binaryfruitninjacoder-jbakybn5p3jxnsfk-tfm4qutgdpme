@@ -48,7 +48,7 @@ public class Database {
     PreparedStatement prep =
       prep = conn.prepareStatement("INSERT INTO users VALUES (?)"
       );
-    String values = new String("1, 130, "34b", "6'7", 20, "hourglass", "libra"");
+    String values = new String();
     prep.setString(1, values);
 
     //  String values = u.getDeclaredFields();  write this method

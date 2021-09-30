@@ -1,0 +1,7 @@
+INPUT
+stars data/stars/wrong-format.csv
+naive_neighbors 5 "Sol"
+OUTPUT
+Read 0 stars from data/stars/wrong-format.csv
+ERROR: The star couldn't be found
+END
