@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.FileReader;
 import java.io.StringWriter;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,9 +38,12 @@ public final class Main {
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
 //    Repl repl = new Repl();
 //    repl.run(?);
+//    for (String str : args) {
+//      System.out.println(str);
+//    }
     new Main(args).run();
 
   }
@@ -82,7 +86,7 @@ public final class Main {
   }
 
 
-  private void run() {
+  private void run() throws SQLException, ClassNotFoundException {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
 
@@ -148,7 +152,7 @@ public final class Main {
                 (arguments[2].replace("\"", "")));
           }
 //          else if (arguments.length == 2 && arguments[0].equals("database") && isPath(arguments[1])) {
-//            userHandler.user(arguments[1])//connetion can be a static object ...
+//            userHandler.user(arguments[1])//connection can be a static object ...
 //          }
           else if (arguments.length == 1 && arguments[0].equals("insertMandy")) {
             User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");

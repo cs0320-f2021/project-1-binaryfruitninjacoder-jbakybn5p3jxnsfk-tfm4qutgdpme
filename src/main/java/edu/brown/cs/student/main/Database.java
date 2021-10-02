@@ -3,6 +3,9 @@ package edu.brown.cs.student.main;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.lang.reflect.*;
+import java.lang.reflect.Field;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,6 +23,8 @@ import java.util.Map;
 public class Database {
 
   private static Connection conn = null;
+  private static List<User> newUsersList = new ArrayList<>();
+
   // private static List<User> UserList = new ArrayList<>();
 
   /**
@@ -43,19 +48,107 @@ public class Database {
     stat.close();
   }
 
-  //method that inserts an object into the list
-  public void insert(User u) throws SQLException, ClassNotFoundException {
-    PreparedStatement prep =
-      prep = conn.prepareStatement("INSERT INTO users VALUES (?)"
-      );
-    String values = new String();
-    prep.setString(1, values);
+//  public static Field[] getDeclaredFields(User user) {
+//    return user.getDeclaredFields();
+//  }
 
-    //  String values = u.getDeclaredFields();  write this method
-     // prep.setString(1, values);
+  //method that inserts an object into the list
+  public void insert(User u)
+      throws SQLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException {
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO users (user_id, weight, bust_size, height, age, body_type, horoscope) VALUES (?)"
+      );
+    StringBuilder values = new StringBuilder();
+    Field[] userInfo = u.getClass().getDeclaredFields();
+    //System.out.println("Printing field = " + userInfo);
+    for (Field field : userInfo) {
+      Object value = field.get(u);
+      values.append(value.toString());
+    }
+    prep.setString(1, values.toString());
+//       System.out.println("Value of Field "
+//           + userInfo[i].getName()
+//           + " is " + value);
+//      System.out.println("Field = " + userInfo[i].toString());
+//    }
+      prep.executeUpdate();
+      prep.close();
+    }
+
+    public void delete(User u) throws SQLException, IllegalAccessException {
+     // alternatively, I can use the DELETE FROM table_name WHERE condition;
+      PreparedStatement prep = conn.prepareStatement("DELETE FROM users (user_id, weight, bust_size, height, age, body_type, horoscope) VALUES (?)");
+      StringBuilder values = new StringBuilder();
+      Field[] userInfo = u.getClass().getDeclaredFields();
+      //System.out.println("Printing field = " + userInfo);
+      for (Field field : userInfo) {
+        Object value = field.get(u);
+        values.append(value.toString());
+      }
+      prep.setString(1, values.toString());
 
       prep.executeUpdate();
       prep.close();
+    }
+
+    public void where(String field, String fieldValue) throws SQLException {
+      PreparedStatement prep = conn.prepareStatement("SELECT * FROM users WHERE " + field + " = " + fieldValue);
+      ResultSet rs = prep.executeQuery();
+      StringBuilder values = new StringBuilder();
+      if (!rs.isClosed()) {
+        while (rs.next()) {
+         newUsersList.add(new User(rs.getInt(0), rs.getInt(1),
+             rs.getString(2), rs.getString(3), rs.getInt(4),
+             rs.getString(5), rs.getString(6)));
+        }
+      }
+      rs.close();
+      prep.close();
+    }
+
+    public void update(String fieldValue, String field, String newValue) throws SQLException {
+      PreparedStatement prep = conn.prepareStatement("UPDATE users SET " + field + " = " + newValue + " WHERE " + field + "=" + fieldValue);
+      prep.executeUpdate();
+      prep.close();
+    }
+
+    public void sql(String sql)
+        throws SQLException, NoSuchMethodException, IllegalAccessException, ClassNotFoundException {
+      String[] sqlSplit = sql.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+      for (String ss : sqlSplit){
+        switch (ss) {
+          case "SELECT": {
+            PreparedStatement prep = conn.prepareStatement(sql);
+            ResultSet rs = prep.executeQuery();
+            StringBuilder values = new StringBuilder();
+            if (!rs.isClosed()) {
+              while (rs.next()) {
+                newUsersList.add(new User(rs.getInt(0), rs.getInt(1),
+                    rs.getString(2), rs.getString(3), rs.getInt(4),
+                    rs.getString(5), rs.getString(6)));
+              }
+            }
+            rs.close();
+            prep.close();
+            break;
+          }
+          case "INSERT": {
+            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            insert(Mandy);
+            break;
+          }
+          case "DELETE": {
+            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            delete(Mandy);
+            break;
+          }
+          case "UPDATE": {
+            PreparedStatement prep = conn.prepareStatement(sql);
+            prep.executeUpdate();
+            prep.close();
+            break;
+          }
+        }
+      }
     }
   }
 
