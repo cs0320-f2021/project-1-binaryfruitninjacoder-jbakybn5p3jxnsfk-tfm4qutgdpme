@@ -150,7 +150,6 @@ public class KDTree<INode> {
     if (count < k || distance < ((ThreeDimNode) boundedPriorityQueue.peekLast()).getEuclideanDistance()){
       KNNSearch((INode) (dx > 0 ? curr.right : curr.left), target, k, index);
     }
-
   }
 
   /**
