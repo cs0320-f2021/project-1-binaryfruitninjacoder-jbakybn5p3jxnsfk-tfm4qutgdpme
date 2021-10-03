@@ -109,6 +109,11 @@ public class REPL {
               if (isPath(next_cmd)) {
                 db = new Database(next_cmd);
               }
+              else if (inputs[1].equals("sql")) {
+                if (db != null) {
+                  db.sql(inputs[2]);
+                }
+              }
               System.out.println("ERROR: This file path does not exist.");
             }
             break;
@@ -148,6 +153,7 @@ public class REPL {
                 db.update(inputs[1], inputs[2], inputs[3]);
               }
             }
+            break;
             default:  // command unrecognized
               errorHandler.inputFormatException();
               break;
