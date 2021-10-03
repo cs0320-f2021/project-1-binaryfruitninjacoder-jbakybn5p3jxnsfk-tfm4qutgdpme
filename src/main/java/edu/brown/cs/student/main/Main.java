@@ -2,18 +2,15 @@ package edu.brown.cs.student.main;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.FileReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.Map;
-import java.util.TreeMap;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import com.google.common.collect.ImmutableMap;
 
 import freemarker.template.Configuration;
@@ -32,40 +29,75 @@ import spark.template.freemarker.FreeMarkerEngine;
  */
 public final class Main {
 
-
   // use port 4567 by default when running server
   private static final int DEFAULT_PORT = 4567;
+
 
   /**
    * The initial method called when execution begins.
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+//    Repl repl = new Repl();
+//    repl.run(?);
+//    for (String str : args) {
+//      System.out.println(str);
+//    }
     new Main(args).run();
+
   }
 
   private String[] args;
-
-  // stars array: [[starID: String, starName: String, X: String, Y: String, Z: String]]
-  private ArrayList<String[]> stars;
-  // counter for total number of stars
-  private int counter;
-  // hm1: {starName: coordinate}
-  private HashMap<String, Double[]> hm1;
-  // hm3: {starName: starID}
-  private HashMap<String, String> hm3;
 
   private Main(String[] args) {
     this.args = args;
   }
 
-  private void run() {
+
+  private static boolean isDouble(String str) {
+    try {
+      Double.parseDouble(str);
+      return true;
+    } catch(NumberFormatException e){
+      return false;
+    }
+  }
+
+  private static boolean isInteger(String str) {
+    try {
+      Integer.parseInt(str);
+      return true;
+    } catch(NumberFormatException e){
+      System.out.println("not an integer");
+      return false;
+    }
+  }
+
+  private static boolean isPath(String str){
+    File f = new File(str);
+    // Check if the specified file
+    // Exists or not
+    if (f.exists())
+    { return true;
+      } else {
+      return false;
+    }
+  }
+
+
+  private void run() throws SQLException, ClassNotFoundException {
     // set up parsing of command line flags
     OptionParser parser = new OptionParser();
 
     // "./run --gui" will start a web server
     parser.accepts("gui");
+
+    MathBot mathbot = new MathBot();
+    starHandler starhandler = new starHandler();
+    Database database = new Database("/vagrant/project-1-binaryfruitninjacoder-jbakybn5p3jxnsfk-tfm4qutgdpme/data/project-1/runwaySMALL.sqlite3");
+    userHandler userHandler = new userHandler();
+
 
     // use "--port <n>" to specify what port on which the server runs
     parser.accepts("port").withRequiredArg().ofType(Integer.class)
@@ -76,179 +108,75 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-    // initialize a StarDistance object
-    StarDistance distCalculator = new StarDistance();
+    //running the parsing method
+   // starhandler.stars("data/stars/stardata.csv");
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       String input;
-      // read the INPUT by line
       while ((input = br.readLine()) != null) {
         try {
           input = input.trim();
-          String[] args = input.split(" ");
+          // Don't split the string into two if the string consists of two words if the string is
+          //bounded between a pair of quotation marks
+          String[] arguments = input.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-          // hm2: {dist difference: starID[]}, a list of starIDs in case there are two stars at equal
-          // distance to the one given
-          HashMap<Double, ArrayList<String>> hm2;
-          // if the args have 2 values in total, the first one is "stars"
-          if (args.length == 2 && args[0].equals("stars")) {
-            // refresh stars array, counter, hashmap1 and hashmap3 so they are refreshed
-            stars = new ArrayList<>();
-            counter = 0;
-            hm1 = new HashMap<>();
-            hm3 = new HashMap<>();
-            // try read in CSV filepath
-            try (BufferedReader fr = new BufferedReader(new FileReader(args[1]))) {
-              String line;
-              int lineNum = 0;
-              while ((line = fr.readLine()) != null) {
-                String[] values = line.split(",");
-                try {
-                  // lineNum = 0 is the header, check if header is in the correct format
-                  if (lineNum == 0 && values[0].equals("StarID") &&
-                      values[1].equals("ProperName") &&
-                      values[2].equals("X") && values[3].equals("Y") && values[4].equals("Z")) {
-                    lineNum++;
-                  } else if (lineNum > 0) {
-                    // split into format like [starID, starName, X, Y, Z]
-                    Double[] coordinate =
-                        distCalculator.formCoordinate(values[2], values[3], values[4]);
-                    // hm1 => {starName: [X,Y,Z]}
-                    // hm3 => {starName: starID}
-                    hm1.put(values[1], coordinate);
-                    hm3.put(values[1], values[0]);
-                    stars.add(values);
-                    counter++;
-                  }
-                } catch (Exception e) {
-                  System.out.println(
-                      "ERROR: CSV format is incorrect, please check header and row information");
-                }
-              }
-              System.out.println("Read " + this.counter + " stars from " + args[1]);
-            } catch (Exception e) {
-              System.out.println("ERROR: The csv file could not be read, please check file path!");
-            }
-          } // whether in the format of naive_neighbors k x y z
-          else if (args.length == 5 && args[0].equals("naive_neighbors") &&
-              !args[2].contains("\"")) {
-            try {
-              //  create hashmap2 --> {distance: starIDs}
-              hm2 = new HashMap<>();
-              int k = Integer.parseInt(args[1]);
-              Double[] coordinate = distCalculator.formCoordinate(args[2], args[3], args[4]);
-              for (String[] star : stars) { // e.g. stars => ["1234", "awesomeStar", "21.00", "2398.23", "284.23"]
-                Double[] starCoordinate = distCalculator.formCoordinate(star[2], star[3], star[4]);
-                double distDiff = distCalculator.euclideanDistance(starCoordinate, coordinate);
-                // fill the hashmap 2
-                if (!hm2.containsKey(distDiff)) {
-                  hm2.put(distDiff, new ArrayList<>());
-                }
-                hm2.get(distDiff).add(star[0]);
-              }
-              // then sort the hashmap2 by key value, ascending
-              Map<Double, ArrayList<String>> sortedhm2 = new TreeMap<>(hm2);
-              // create res array to put all starIDs (after sorting by distance in ascending order) inside
-              ArrayList<String> res = new ArrayList<>();
-              for (Double dist : sortedhm2.keySet()) {
-                if (sortedhm2.get(dist).size() == 1) {
-                  res.add(sortedhm2.get(dist).get(0));
-                } else {
-                  // shuffles the equidistance stars in place to guarantee randomness, then add all to res array
-                  Collections.shuffle(sortedhm2.get(dist));
-                  res.addAll(sortedhm2.get(dist));
-                }
-              }
-              // print the first K starIDs
-              for (int i = 0; i < k; i++) {
-                System.out.println(res.get(i));
-              }
-            } catch (Exception e) {
-              System.out.println(
-                  "ERROR: We couldn't process your input, please check if you follow the format: naive_neighbors k x y z");
-            }
+          // Progress test: to see what the arguments are
+          //          StringBuffer sb = new StringBuffer();
+          //          for(int i = 0; i < arguments.length; i++) {
+          //            System.out.println(arguments[i]);
+          //          }
+
+          //for the lab, conducting the add method
+          if (arguments[0].equals("add") && isDouble(arguments[1]) &&
+              isDouble(arguments[2])) {
+            System.out.println(mathbot.add(Double.parseDouble(arguments[1]),
+                Double.parseDouble(arguments[2])));
+            //for the lab, conducting the subtract method
+          } else if (arguments[0].equals("subtract") && isDouble(arguments[1]) &&
+              isDouble(arguments[2])) {
+            System.out.println(mathbot.subtract(Double.parseDouble(arguments[1]),
+                Double.parseDouble(arguments[2])));
+            //when "stars" is called we will parse the given CSV
+          } else if (arguments.length == 2 && arguments[0].equals("stars") && isPath(arguments[1])) {
+            starhandler.stars(arguments[1]);
+            //when "naive_neighbors" is called with a coordinate,
+            //we will call the naive neighbours method
+          } else if (arguments[0].equals("naive_neighbors") && isInteger(arguments[1]) &&
+              isDouble(arguments[2]) && isDouble(arguments[3]) && isDouble(arguments[4])) {
+            starhandler.naive_neighbors(Integer.parseInt(arguments[1]), Double.parseDouble(arguments[2]),
+                    Double.parseDouble(arguments[3]), Double.parseDouble(arguments[4]), -1);
+            //when "naive_neighbors" is called with a star name we will call the naive neighbours
+            //by name method
+          } else if (arguments[0].equals("naive_neighbors") && isInteger(arguments[1])) {
+            starhandler.naive_neighborsByName(Integer.parseInt(arguments[1]),
+                (arguments[2].replace("\"", "")));
           }
-          // case where INPUT is in the format of naive_neighbors k "name"
-          else if (args.length >= 3 && args[0].equals("naive_neighbors") &&
-              args[2].contains("\"")) {
-            try {
-              //  create hashmap2 --> {distance: starIDs}
-              hm2 = new HashMap<>();
-              int k = Integer.parseInt(args[1]);
-              String starName;
-              // case where there's no empty space in the starName -> e.g. "Sol"
-              if (args.length == 3) {
-                starName = args[2].replace("\"", "");
-              } else { // case there's empty space, thus args is longer than 3 and the third element has "\"" -> e.g. "Lonely Star"
-                // extract name in form of list
-                ArrayList<String> starNameWithQuoteLst =
-                    new ArrayList<>(Arrays.asList(args).subList(2, args.length));
-
-                // join name by delimiter " " and get rid of "\""
-                String starNameWithQuote = String.join(" ", starNameWithQuoteLst);
-                starName = starNameWithQuote.replace("\"", "");
-
-              }
-              // case where the starName is not in the dataset
-              if (!this.hm1.containsKey(starName)) {
-                System.out.println("ERROR: The star couldn't be found");
-              } else {
-                Double[] starCoordinate = this.hm1.get(starName);
-                for (String[] star : stars) { // stars => ["1234", "awesomeStar", "21.00", "2398.23", "284.23"]
-                  Double[] coordinate = distCalculator.formCoordinate(star[2], star[3], star[4]);
-                  double distDiff = distCalculator.euclideanDistance(starCoordinate, coordinate);
-                  if (!hm2.containsKey(distDiff)) {
-                    hm2.put(distDiff, new ArrayList<>());
-                  }
-                  hm2.get(distDiff).add(star[0]);
-                }
-                // then sort the hashmap by key value (difference in dist), ascending
-                Map<Double, ArrayList<String>> sortedhm2 = new TreeMap<>(hm2);
-                ArrayList<String> res = new ArrayList<>();
-                for (Double dist : sortedhm2.keySet()) {
-                  if (sortedhm2.get(dist).size() == 1) {
-                    res.add(sortedhm2.get(dist).get(0));
-                  } else {
-                    // shuffles the equidistance stars in place to guarantee randomness
-                    Collections.shuffle(sortedhm2.get(dist));
-                    res.addAll(sortedhm2.get(dist));
-                  }
-                }
-                // remove the star itself from the returned results
-                String thisStarID = hm3.get(starName);
-                res.remove(thisStarID);
-                if (res.isEmpty()) {
-                  continue;
-                }
-                // if the k is smaller than total number of stars, pick top k
-                else if (k <= this.counter) {
-                  for (int i = 0; i < k; i++) {
-                    System.out.println(res.get(i));
-                  }
-                  // otherwise, return all
-                } else {
-                  for (String starID : res) {
-                    System.out.println(starID);
-                  }
-                }
-              }
-            } catch (Exception e) {
-              System.out.println(
-                  "ERROR: We couldn't process your input, please make sure the format follows: naive_neighbors k \"star name\"");
-            }
-          } else {
-            System.out.println(
-                "ERROR: Sorry, invalid input! Please make sure yor file path is correct, and you have entered the naive_neighbors method in the right format!");
+//          else if (arguments.length == 2 && arguments[0].equals("database") && isPath(arguments[1])) {
+//            userHandler.user(arguments[1])//connection can be a static object ...
+//          }
+          else if (arguments.length == 1 && arguments[0].equals("insertMandy")) {
+            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            database.insert(Mandy);
           }
-        } catch (Exception e) {
+          //when an incorrect command is typed
+          else {
+            System.out.println("ERROR: incorrect command");
+          }
+        }
+        catch (Exception e) {
+           e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");
         }
       }
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("ERROR: Invalid input for REPL");
     }
-
   }
+
+
+
+
 
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration(Configuration.VERSION_2_3_0);
@@ -318,4 +246,10 @@ public final class Main {
       return new ModelAndView(variables, "main.ftl");
     }
   }
+
+
+
+
+
+
 }

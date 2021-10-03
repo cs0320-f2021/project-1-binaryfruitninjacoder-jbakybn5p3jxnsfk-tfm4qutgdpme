@@ -1,8 +1,11 @@
 package edu.brown.cs.student.main;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -23,13 +26,29 @@ public class REPL {
     this.commands = commands;
   }
 
+  // Check if the specified file Exists or not
+  private static boolean isPath(String str){
+    File f = new File(str);
+    if (f.exists())
+    { return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * This run method for the REPL requires an ApiClient object.
    *
    */
-  public void run() {
+  public void run() throws SQLException, ClassNotFoundException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     ErrorHandler errorHandler = new ErrorHandler();
+
+    //not sure if I can do this
+    Database db = null;
+
+
+
 
     while (true) { // parsing input loop
       try {
@@ -40,10 +59,14 @@ public class REPL {
 
         // initialize a StringTokenizer to help parse the input, broken by space or tabs
         StringTokenizer st = new StringTokenizer(s, " \t", false);
+        s = s.trim();
+        String[] inputs = s.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
 
         // if the input is not blank, get the first token (the command string)
         if (st.hasMoreTokens()) {
           String command = st.nextToken();
+
 
           switch (command) {
             case "user":  // reads in the sqlite file for ORM or API
@@ -75,15 +98,62 @@ public class REPL {
 //              }
               // TODO create a Handler to print out a horoscope comparison chart of the k most similar users [closest in euclidean distance of weights, heights, and ages]
               //either by "similar k some_user_id" or "similar k weight height age"
-
               break;
+            }
+            case "database":{
+              if (st.hasMoreTokens()) {
+                next_cmd = st.nextToken();
+              } else {
+                next_cmd = "";
+              }
+              if (isPath(next_cmd)) {
+                db = new Database(next_cmd);
+              }
+              System.out.println("ERROR: This file path does not exist.");
+            }
+            break;
+            case "insert":{
+             if (db != null) {
+               // if (db.getClass().getField("Conn").isOpen())
+               if (st.hasMoreTokens()) {
+                 User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+                 db.insert(Mandy);
+                 next_cmd = st.nextToken();
+               } else {
+                 next_cmd = "";
+               }
+             }
+            }
+            break;
+            case "delete": {
+              if (db != null) {
+                if (st.hasMoreTokens()) {
+                  User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+                  db.delete(Mandy);
+                  next_cmd = st.nextToken();
+                } else {
+                  next_cmd = "";
+                }
+              }
+            }
+            break;
+            case "select": {
+              if (db != null) {
+                db.where(inputs[1], inputs[2]);
+              }
+            }
+            break;
+            case "update": {
+              if (db != null) {
+                db.update(inputs[1], inputs[2], inputs[3]);
+              }
             }
             default:  // command unrecognized
               errorHandler.inputFormatException();
               break;
           }
         }
-      } catch (IOException e) { // some kind of read error, so the repl exits
+      } catch (IOException | IllegalAccessException | NoSuchMethodException e) { // some kind of read error, so the repl exits
         errorHandler.parseInputException();
         break;
       }

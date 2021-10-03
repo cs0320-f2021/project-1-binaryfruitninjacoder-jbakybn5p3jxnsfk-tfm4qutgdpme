@@ -5,3 +5,5 @@ target/
 .idea/
 **.DS_Store**
 *.prefs
+.data/project-1
+*.sqlite3
