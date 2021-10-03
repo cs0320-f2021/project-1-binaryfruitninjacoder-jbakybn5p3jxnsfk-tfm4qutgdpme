@@ -17,12 +17,12 @@ import java.lang.*;
 import java.util.Arrays;
 
 
-public class userHandler {
+public class UserHandler {
 
   /**
    * constructor for userHandler
    */
-  public userHandler() {
+  public UserHandler() {
 
   }
 

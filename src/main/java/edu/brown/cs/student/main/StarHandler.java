@@ -17,12 +17,12 @@ import java.lang.*;
 import java.util.Arrays;
 
 
-public class starHandler {
+public class StarHandler {
 
   /**
    * constructor for starHandler
    */
-  public starHandler() {
+  public StarHandler() {
 
   }
 

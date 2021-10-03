@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.FileReader;
 import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import com.google.common.collect.ImmutableMap;
 
 import freemarker.template.Configuration;
@@ -94,9 +92,9 @@ public final class Main {
     parser.accepts("gui");
 
     MathBot mathbot = new MathBot();
-    starHandler starhandler = new starHandler();
+    StarHandler starhandler = new StarHandler();
     Database database = new Database("/vagrant/project-1-binaryfruitninjacoder-jbakybn5p3jxnsfk-tfm4qutgdpme/data/project-1/runwaySMALL.sqlite3");
-    userHandler userHandler = new userHandler();
+    UserHandler userHandler = new UserHandler();
 
 
     // use "--port <n>" to specify what port on which the server runs

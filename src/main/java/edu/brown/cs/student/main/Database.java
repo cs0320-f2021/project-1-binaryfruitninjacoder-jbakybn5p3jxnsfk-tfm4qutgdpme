@@ -23,9 +23,7 @@ import java.util.Map;
 public class Database {
 
   private static Connection conn = null;
-  private static List<User> newUsersList = new ArrayList<>();
-
-  // private static List<User> UserList = new ArrayList<>();
+  private static List<User> UserList = new ArrayList<>();
 
   /**
    * Instantiates the database, creating tables if necessary.
@@ -93,10 +91,9 @@ public class Database {
     public void where(String field, String fieldValue) throws SQLException {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM users WHERE " + field + " = " + fieldValue);
       ResultSet rs = prep.executeQuery();
-      StringBuilder values = new StringBuilder();
       if (!rs.isClosed()) {
         while (rs.next()) {
-         newUsersList.add(new User(rs.getInt(0), rs.getInt(1),
+         UserList.add(new User(rs.getInt(0), rs.getInt(1),
              rs.getString(2), rs.getString(3), rs.getInt(4),
              rs.getString(5), rs.getString(6)));
         }
@@ -104,6 +101,20 @@ public class Database {
       rs.close();
       prep.close();
     }
+
+  public void rowToUser() throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT * FROM users");
+    ResultSet rs = prep.executeQuery();
+    if (!rs.isClosed()) {
+      while (rs.next()) {
+        UserList.add(new User(rs.getInt(0), rs.getInt(1),
+            rs.getString(2), rs.getString(3), rs.getInt(4),
+            rs.getString(5), rs.getString(6)));
+      }
+    }
+    rs.close();
+    prep.close();
+  }
 
     public void update(String fieldValue, String field, String newValue) throws SQLException {
       PreparedStatement prep = conn.prepareStatement("UPDATE users SET " + field + " = " + newValue + " WHERE " + field + "=" + fieldValue);
@@ -122,7 +133,7 @@ public class Database {
             StringBuilder values = new StringBuilder();
             if (!rs.isClosed()) {
               while (rs.next()) {
-                newUsersList.add(new User(rs.getInt(0), rs.getInt(1),
+                UserList.add(new User(rs.getInt(0), rs.getInt(1),
                     rs.getString(2), rs.getString(3), rs.getInt(4),
                     rs.getString(5), rs.getString(6)));
               }
@@ -132,12 +143,12 @@ public class Database {
             break;
           }
           case "INSERT": {
-            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            User Mandy = new User(1, 130, "34b", "6' 7\"", 20, "hourglass", "libra");
             insert(Mandy);
             break;
           }
           case "DELETE": {
-            User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+            User Mandy = new User(1, 130, "34b", "6' 7\"", 20, "hourglass", "libra");
             delete(Mandy);
             break;
           }
