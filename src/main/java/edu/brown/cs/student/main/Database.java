@@ -18,6 +18,7 @@ import java.util.Map;
         private static ArrayList<INode> nodes = new ArrayList<>();
         private static HashMap<INode, Integer> userMap = new HashMap<>();
         private static HashMap<Integer, INode> idMap = new HashMap<>();
+        private static HashMap<Integer, String> horoscopeMap = new HashMap<>();
 
         /**
          * Instantiates the database
@@ -47,13 +48,14 @@ import java.util.Map;
          * @throws SQLException if something goes wrong with the SQL
          */
         void populateUserListAndMap() throws SQLException {
-            PreparedStatement prep = conn.prepareStatement("SELECT users.weight, users.height, users.age, users.user_id FROM users;");
+            PreparedStatement prep = conn.prepareStatement("SELECT users.weight, users.height, users.age, users.user_id, users.horoscope FROM users;");
             ResultSet rs = prep.executeQuery();
             while (rs.next()) {
                 String weight = rs.getString(1);
                 String height = rs.getString(2);
                 String age = rs.getString(3);
                 String id = rs.getString(4);
+                String horoscope = rs.getString(5);
                 weight = weight.substring(0, weight.length() - 2);
                 double weightNum = Double.parseDouble(weight);
                 height = height.charAt(0) + height.substring(3, height.length() - 1); //substring in format (510)
@@ -64,15 +66,13 @@ import java.util.Map;
                 nodes.add(user);
                 userMap.put(user, idInt);
                 idMap.put(idInt, user);
+                horoscopeMap.put(idInt, horoscope);
 
             }
             rs.close();
             prep.close();
         }
 
-        void populateHoroscopeCount() throws SQLException{
-            //sql query to
-        }
 
         /**
          * getter to return user list
@@ -95,6 +95,10 @@ import java.util.Map;
          */
         HashMap<Integer, INode> getIdMap() {
             return idMap;
+        }
+
+        HashMap<Integer, String> getHoroscopeMap(){
+            return horoscopeMap;
         }
 
     }
