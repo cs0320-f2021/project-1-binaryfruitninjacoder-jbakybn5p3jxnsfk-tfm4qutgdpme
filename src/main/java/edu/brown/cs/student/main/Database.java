@@ -3,7 +3,7 @@ package edu.brown.cs.student.main;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+
 
 
     /**
@@ -28,16 +28,12 @@ import java.util.Map;
          * @throws SQLException if an error occurs in any SQL query.
          */
         Database(String filename) throws SQLException, ClassNotFoundException {
-
             Class.forName("org.sqlite.JDBC");
             String urlToDB = "jdbc:sqlite:" + filename; //not sure if filename is in correct format
             conn = DriverManager.getConnection(urlToDB);
             Statement stat = conn.createStatement();
             stat.executeUpdate("PRAGMA foreign_keys=ON;");
             stat.close();
-
-            PreparedStatement prep;
-            prep = conn.prepareStatement("");
         }
 
 
@@ -56,18 +52,17 @@ import java.util.Map;
                 String age = rs.getString(3);
                 String id = rs.getString(4);
                 String horoscope = rs.getString(5);
-                weight = weight.substring(0, weight.length() - 2);
-                double weightNum = Double.parseDouble(weight);
+                weight = weight.substring(0, weight.length() - 3); //eliminate "lbs"
+                double weightNum = Double.parseDouble(weight); //change weight String to Double
                 height = height.charAt(0) + height.substring(3, height.length() - 1); //substring in format (510)
-                double heightNum = (Double.parseDouble(String.valueOf(height.charAt(0))) * 12) + Double.parseDouble(height.substring(1, height.length())); //not sure why i need valueof
-                double ageNum = Double.parseDouble(age);
+                double heightNum = ((Double.parseDouble(height.substring(0,1))) * 12) + Double.parseDouble(height.substring(1));
+                double ageNum = Double.parseDouble(age); //age string to int
                 Integer idInt = Integer.parseInt(id);
                 ThreeDimNode user = new ThreeDimNode(weightNum, heightNum, ageNum);
                 nodes.add(user);
                 userMap.put(user, idInt);
                 idMap.put(idInt, user);
                 horoscopeMap.put(idInt, horoscope);
-
             }
             rs.close();
             prep.close();
@@ -96,6 +91,11 @@ import java.util.Map;
         HashMap<Integer, INode> getIdMap() {
             return idMap;
         }
+
+        /**
+         * getter returns hashmap of id to horoscope name
+         * @return horoscopeMap with user ID's mapped to horoscope
+         */
 
         HashMap<Integer, String> getHoroscopeMap(){
             return horoscopeMap;
