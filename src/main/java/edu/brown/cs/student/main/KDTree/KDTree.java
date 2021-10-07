@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.KDTree;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 
@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
 
-public class KDTree<INode> {
+public class KDTree<INode> implements IKDTree {
   // idea: when storing the user information, first store them in List<User>, when construct
   // a balanced KDTree
   // alternative approach KDTree interface with node without generic interface for node

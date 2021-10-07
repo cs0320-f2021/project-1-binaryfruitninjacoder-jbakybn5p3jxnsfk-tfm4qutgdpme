@@ -1,6 +1,4 @@
-package edu.brown.cs.student.main;
-
-import java.util.Comparator;
+package edu.brown.cs.student.main.KDTree;
 
 /**
  * A generic interface for a node in the KDTree, aiming to provide general methods of a tree node

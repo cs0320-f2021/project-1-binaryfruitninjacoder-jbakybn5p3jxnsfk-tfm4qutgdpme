@@ -1,11 +1,14 @@
 package edu.brown.cs.student.main;
 
+import edu.brown.cs.student.main.Handlers.ErrorHandler;
+import edu.brown.cs.student.main.ORM.Database;
+import edu.brown.cs.student.main.ORM.User;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -21,7 +24,6 @@ public class REPL {
    * @param commands - a map of string command names to IReplMethod objects, which
    *                 are a wrapper for a method to be called
    */
-  // TODO: create a more generic interface for Handler
   public REPL(HashMap<String, Object> commands) {
     this.commands = commands;
   }
@@ -76,14 +78,9 @@ public class REPL {
               } else {
                 next_cmd = "";
               }
-              if (next_cmd.equals("online")) {
-                // TODO (For API ppl) do something that's related to the API pursuers, please fill this part in
+              if (isPath(next_cmd)) {
+
               }
-//              try {
-//                // TODO (for ORM) call a method that handles reading in sqlite files
-//              } catch (IOException e) {
-//                errorHandler.filePathException();
-//              }
               break;
             case "similar":
               // TODO create a Handler that "prints out the user_ids of the most similar k users", either searching by user_id or

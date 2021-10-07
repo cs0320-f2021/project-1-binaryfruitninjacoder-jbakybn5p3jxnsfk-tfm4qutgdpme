@@ -1,18 +1,15 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.lang.reflect.*;
 import java.lang.reflect.Field;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -32,7 +29,7 @@ public class Database {
    * @param filename file name of SQLite3 database to open.
    * @throws SQLException if an error occurs in any SQL query.
    */
-  Database(String filename) throws SQLException, ClassNotFoundException {
+  public Database(String filename) throws SQLException, ClassNotFoundException {
 
     // this line loads the driver manager class, and must be
 // present for everything else to work properly

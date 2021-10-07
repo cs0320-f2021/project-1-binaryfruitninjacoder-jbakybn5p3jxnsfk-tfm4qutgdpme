@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.Stars;
 import java.util.*;
 import java.util.Collections;
 
