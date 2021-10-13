@@ -1,82 +1,124 @@
 package edu.brown.cs.student.main.Stars;
-import java.util.*;
-import java.util.Collections;
 
+import edu.brown.cs.student.main.coordinates.Coordinate;
 
-public class Star {
-  String properName;
-  double x;
-  double y;
-  double z;
-  int id;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+/** Class that represents a Star i.e. each row in a stardata CSV file.
+ */
+public class Star implements Coordinate<Integer> {
+  private final int id;
+  private final String name;
+  private final List<Double> coordinates;
 
-  /**
-   * Constructor for star
+  /** Create an instance of a 3D Star with the passed arguments.
+   @param id An int representing the index of the Star.
+   @param name A String representing the name of the Star.
+   @param x A double representing the x-coordinate of the Star.
+   @param y A double representing the y-coordinate of the Star.
+   @param z A double representing the z-coordinate of the Star.
    */
-  public Star(String name, double _x, double _y, double _z, int _id){
-    properName = name;
-    x = _x;
-    y = _y;
-    z = _z;
-    id = _id;
+  public Star(int id, String name, double x, double y, double z) {
+    this.id = id;
+    this.name = name;
+    List<Double> coor = new ArrayList<>();
+    coor.add(x);
+    coor.add(y);
+    coor.add(z);
+    this.coordinates = coor;
   }
 
-  /**
-   * method that returns the id of the star
-   * @return id of star
+  /** Create an instance of an N-D Star with the passed arguments.
+   @param id An int representing the index of the Star.
+   @param name A String representing the name of the Star.
+   @param coor A List of double representing all coordiantes of the Star.
    */
-  public int getId(){
+  public Star(int id, String name, List<Double> coor) {
+    this.id = id;
+    this.name = name;
+    this.coordinates = coor;
+  }
+  /** Return the name of the Star instantiation.
+   @return 1 String.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /** Return the x-coordinate of the Star instantiation.
+   @return 1 double.
+   */
+  public double getX() {
+    return coordinates.get(0);
+  }
+
+  /** Return the y-coordinate of the Star instantiation.
+   @return 1 double.
+   */
+  public double getY() {
+    return coordinates.get(1);
+  }
+
+  /** Return the z-coordinate of the Star instantiation.
+   @return 1 double.
+   */
+  public double getZ() {
+    return coordinates.get(2);
+  }
+
+  @Override
+  public Double getCoordinateVal(int dim) {
+    return coordinates.get(dim - 1);
+  }
+
+  @Override
+  public Integer getId() {
     return id;
   }
 
-  /**
-   * method that returns the x coordinate of the star
-   * @return x coordinate of star
-   */
-  public double getX() {
-    return x;
+  @Override
+  public List<Double> getCoordinates() {
+    return coordinates;
   }
 
-  /**
-   * method that returns the y coordinate of the star
-   * @return y coordinate of star
-   */
-  public double getY() {
-    return y;
+  @Override
+  public String toString() {
+    StringBuilder allCoords = new StringBuilder();
+
+    for (Double c : coordinates) {
+      allCoords.append(c.toString()).append(", ");
+    }
+
+    return "Coordinate{"
+        + "id=" + id
+        + ", coordinates=[" + allCoords + "]"
+        + '}';
   }
 
-  /**
-   * method that returns the z coordinate of the star
-   * @return z coordinate of star
+  /** Check if this Star is equal to the passed object.
+   @param o Another object
+   @return a Boolean ture/false if the objects are equal.
    */
-  public double getZ() {
-    return z;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Star star = (Star) o;
+    return id == star.id && Objects.equals(name, star.name)
+        && Objects.equals(coordinates, star.coordinates);
   }
 
-
-  /**
-   * method that returns the name of the star
-   * @return name of star
+  /** Get a hashcode for a Star.
+   @return an int representing the hash index.
    */
-  public String getName(){
-    return properName;
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, coordinates);
   }
-
-
-  /**
-   * method that calculates the distance between this.star by accessing the coordinate
-   * of this.star and the given coordinate
-   * @param an array of doubles representing the coordinates of a location
-   * @return a double representing the distance between this star and the given coordinate
-   */
-  public double getDist(Double[] coordinates){
-    double result = 0.0;
-    double squarex = Math.pow((this.x - coordinates[0]), 2);
-    double squarey = Math.pow((this.y - coordinates[1]), 2);
-    double squarez = Math.pow((this.z - coordinates[2]), 2);
-    result = Math.sqrt(squarex + squarey + squarez);
-    return result;
-  }
-
 }

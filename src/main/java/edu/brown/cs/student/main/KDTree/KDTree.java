@@ -12,7 +12,6 @@ public class KDTree<INode> implements IKDTree {
   // a balanced KDTree
   // alternative approach KDTree interface with node without generic interface for node
 
-
   private int dimensions;
   private INode root;
   private MinMaxPriorityQueue<INode> boundedPriorityQueue;
@@ -65,6 +64,7 @@ public class KDTree<INode> implements IKDTree {
    * @param node
    * @return
    */
+  @Override
   public boolean contains(ThreeDimNode node, ThreeDimNode target, int index) {
     // tree traversal and check contains
     if (Arrays.equals(node.getCoordinates(), target.getCoordinates())) {

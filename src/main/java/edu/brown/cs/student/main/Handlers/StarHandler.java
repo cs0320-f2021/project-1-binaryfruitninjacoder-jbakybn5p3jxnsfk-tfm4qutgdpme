@@ -34,11 +34,12 @@ public class StarHandler {
     starMap = new HashMap<>();
     try (BufferedReader br2 = new BufferedReader(new FileReader(filename))) {
       String line = br2.readLine();
-      while ((line = br2.readLine()) != null) {
+      while (line != null) {
         String[] values = line.split(",");
-        Star star = new Star(values[1], Double.parseDouble(values[2]),
-            Double.parseDouble(values[3]), Double.parseDouble(values[4]), Integer.parseInt(values[0]));
-        starMap.put(Integer.parseInt(values[0]), star);
+        //TODO
+//        Star star = new Star(values[1], Double.parseDouble(values[2]),
+//            Double.parseDouble(values[3]), Double.parseDouble(values[4]), Integer.parseInt(values[0]));
+//        starMap.put(Integer.parseInt(values[0]), star);
       }
       System.out.println("Read " + starMap.size() + " stars from " + filename);
       valueList = new ArrayList(starMap.values());
@@ -60,7 +61,9 @@ public class StarHandler {
    */
   private class StarComparatorByDist implements Comparator<Star> {
     public int compare(Star a, Star b){
-      return Double.compare(a.getDist(coordinates), b.getDist(coordinates));
+      //TODO
+      return 0;
+//      return Double.compare(a.getDist(coordinates), b.getDist(coordinates));
     }
   }
 
