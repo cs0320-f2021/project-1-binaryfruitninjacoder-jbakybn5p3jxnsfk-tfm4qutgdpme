@@ -13,12 +13,12 @@ import java.util.HashMap;
      */
     public class Database {
 
-
-        private static Connection conn = null;
-        private static ArrayList<INode> nodes = new ArrayList<>();
-        private static HashMap<INode, Integer> userMap = new HashMap<>();
-        private static HashMap<Integer, INode> idMap = new HashMap<>();
-        private static HashMap<Integer, String> horoscopeMap = new HashMap<>();
+        Connection conn = null;
+        ArrayList<INode> userList = new ArrayList<>();
+        HashMap<INode, Integer> userMap = new HashMap<>();
+        HashMap<Integer, INode> idMap = new HashMap<>();
+        HashMap<Integer, String> horoscopeMap = new HashMap<>();
+        KDTree builtTree;
 
         /**
          * Instantiates the database
@@ -55,53 +55,21 @@ import java.util.HashMap;
                 weight = weight.substring(0, weight.length() - 3); //eliminate "lbs"
                 double weightNum = Double.parseDouble(weight); //change weight String to Double
                 height = height.charAt(0) + height.substring(3, height.length() - 1); //substring in format (510)
-                double heightNum = ((Double.parseDouble(height.substring(0,1))) * 12) + Double.parseDouble(height.substring(1));
+                double heightNum = ((Double.parseDouble(height.substring(0, 1))) * 12) + Double.parseDouble(height.substring(1));
                 double ageNum = Double.parseDouble(age); //age string to int
                 Integer idInt = Integer.parseInt(id);
                 ThreeDimNode user = new ThreeDimNode(weightNum, heightNum, ageNum);
-                nodes.add(user);
+                userList.add(user);
                 userMap.put(user, idInt);
                 idMap.put(idInt, user);
                 horoscopeMap.put(idInt, horoscope);
+                builtTree = new KDTree(userList.size(), userList);
             }
             rs.close();
             prep.close();
-        }
+        }}
 
 
-        /**
-         * getter to return user list
-         * @return list of users
-         */
-        ArrayList<INode> getUserList(){
-            return nodes;
-        }
-        /**
-         * getter to return hashmap of users to id
-         * @return userMap with user ID's mapped to users
-         */
-        HashMap<INode, Integer> getUserMap() {
-            return userMap;
-        }
-
-        /**
-         * getter to return hashmap of id to users
-         * @return userMap with user ID's mapped to users
-         */
-        HashMap<Integer, INode> getIdMap() {
-            return idMap;
-        }
-
-        /**
-         * getter returns hashmap of id to horoscope name
-         * @return horoscopeMap with user ID's mapped to horoscope
-         */
-
-        HashMap<Integer, String> getHoroscopeMap(){
-            return horoscopeMap;
-        }
-
-    }
 
 
 
