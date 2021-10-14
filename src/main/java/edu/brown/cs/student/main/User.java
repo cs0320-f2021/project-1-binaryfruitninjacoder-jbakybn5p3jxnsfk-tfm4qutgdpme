@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 
 public class User {
   private int user_id;
-  private int weight;
+  private double weight;
   private String bust_size;
   private String height;
   private int age;
@@ -19,7 +19,7 @@ public class User {
    * Constructor for User
    */
 
-  public User(int id, int weight, String bust_size, String height, int age, String body_type,
+  public User(int id, double weight, String bust_size, String height, int age, String body_type,
                String horoscope){
     this.user_id = id;
     this.weight = weight;
@@ -42,6 +42,7 @@ public class User {
     return this.weight;
   }
 
+
   public double getHeight() {
     // "6' 9""
     double a = 0.3048;
@@ -54,8 +55,37 @@ public class User {
     return this.age;
   }
 
+  public String getBust() {
+    return this.bust_size;
+  }
+
   public String getHoroscope() {
     return this.horoscope;
   }
 
+  public String getBody_type() {
+    return this.body_type;
+  }
+
+  @Override
+  public boolean equals(Object user) {
+
+    // If the object is compared with itself then return true
+    if (user == this) {
+      return true;
+    }
+    /* Check if user is an instance of Complex or not
+     "null instanceof [type]" also returns false */
+    if (!(user instanceof User)) {
+      return false;
+    }
+
+    // typecast user to User so that we can compare data members
+    User c = (User) user;
+
+    // Compare the data members and return accordingly
+    return this.getId() == c.getId() && this.getWeight() == c.getWeight() &&
+        this.getBust().equals(c.getBust()) &&
+        this.getHeight() == c.getHeight() && this.getAge() == c.getAge();
+  }
 }

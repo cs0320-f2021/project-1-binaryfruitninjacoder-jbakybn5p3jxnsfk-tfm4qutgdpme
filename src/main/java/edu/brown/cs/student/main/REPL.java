@@ -44,10 +44,8 @@ public class REPL {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     ErrorHandler errorHandler = new ErrorHandler();
 
-    //not sure if I can do this
+//initialising the database
     Database db = null;
-
-
 
 
     while (true) { // parsing input loop
@@ -121,7 +119,7 @@ public class REPL {
              if (db != null) {
                // if (db.getClass().getField("Conn").isOpen())
                if (st.hasMoreTokens()) {
-                 User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+                 User Mandy = new User(1, 130.0, "34b", "6'7", 20, "hourglass", "libra");
                  db.insert(Mandy);
                  next_cmd = st.nextToken();
                } else {
@@ -133,7 +131,7 @@ public class REPL {
             case "delete": {
               if (db != null) {
                 if (st.hasMoreTokens()) {
-                  User Mandy = new User(1, 130, "34b", "6'7", 20, "hourglass", "libra");
+                  User Mandy = new User(1, 130.0, "34b", "6'7", 20, "hourglass", "libra");
                   db.delete(Mandy);
                   next_cmd = st.nextToken();
                 } else {
