@@ -1,5 +1,6 @@
 package edu.brown.cs.student.main;
 
+import edu.brown.cs.student.main.Stars.StarDistance;
 import org.junit.Assert;
 import org.junit.Test;
 

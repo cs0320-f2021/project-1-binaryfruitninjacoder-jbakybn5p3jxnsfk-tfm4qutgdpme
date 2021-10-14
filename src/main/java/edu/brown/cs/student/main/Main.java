@@ -11,6 +11,11 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.main.Handlers.MathBot;
+import edu.brown.cs.student.main.Handlers.StarHandler;
+import edu.brown.cs.student.main.Handlers.UserHandler;
+import edu.brown.cs.student.main.ORM.Database;
+import edu.brown.cs.student.main.ORM.User;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
