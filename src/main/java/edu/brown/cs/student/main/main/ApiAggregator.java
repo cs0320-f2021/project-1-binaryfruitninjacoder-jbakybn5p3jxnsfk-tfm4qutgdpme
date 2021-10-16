@@ -2,6 +2,10 @@ package edu.brown.cs.student.main.main;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import edu.brown.cs.student.main.API.Interests;
+import edu.brown.cs.student.main.API.Negative;
+import edu.brown.cs.student.main.API.Positive;
+import edu.brown.cs.student.main.API.Skills;
 import edu.brown.cs.student.main.client.ApiClient;
 import edu.brown.cs.student.main.client.ClientRequestGenerator;
 
@@ -57,6 +61,19 @@ public class ApiAggregator {
     public Type setType(String dataType) throws Exception {
         Type type;
 
+        if(dataType.equals("skills")){
+            return new TypeToken<List<Skills>>(){}.getType();
+        }else if(dataType.equals("interests")){
+            return new TypeToken<List<Interests>>(){}.getType();
+        }else if (dataType.equals("positive")){
+            return new TypeToken<List<Positive>>(){}.getType();
+        } else if (dataType.equals("negative")){
+        return new TypeToken<List<Negative>>(){}.getType();
+    }else {
+            throw new Exception("The aggregator does not contain a content type called: " + dataType);
+        }
+
+
         /*
 
         Example usage from Project 1: Sprint...
@@ -74,7 +91,7 @@ public class ApiAggregator {
 
 
         // dummy return
-        return new TypeToken<List<Object>>(){}.getType();
+       // return new TypeToken<List<Object>>(){}.getType();
     }
 
 }

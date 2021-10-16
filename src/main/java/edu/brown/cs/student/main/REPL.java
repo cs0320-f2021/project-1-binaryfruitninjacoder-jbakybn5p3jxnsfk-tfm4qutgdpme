@@ -3,6 +3,9 @@ package edu.brown.cs.student.main;
 import edu.brown.cs.student.main.Handlers.ErrorHandler;
 import edu.brown.cs.student.main.ORM.Database;
 import edu.brown.cs.student.main.ORM.User;
+import edu.brown.cs.student.main.client.ApiClient;
+import edu.brown.cs.student.main.client.ClientRequestGenerator;
+import edu.brown.cs.student.main.main.ApiAggregator;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,6 +48,7 @@ public class REPL {
   public void run() throws SQLException, ClassNotFoundException {
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     ErrorHandler errorHandler = new ErrorHandler();
+    ApiClient client = new ApiClient();
 
 //initialising the database
     Database db = null;
@@ -95,6 +99,19 @@ public class REPL {
               //either by "similar k some_user_id" or "similar k weight height age"
               break;
             }
+            case "recsys_load": {
+              if (st.hasMoreTokens()) {
+                next_cmd = st.nextToken();
+              } else {
+                next_cmd = "";
+              }
+              if (next_cmd.equals("responses")) {
+
+
+                 //TODO: Fill in this part to call the API component
+                }//TODO: Message that says Loaded Recommender with k students, or maybe say this in the API component
+            }
+            break;
             case "database":{
               if (st.hasMoreTokens()) {
                 next_cmd = st.nextToken();
@@ -149,6 +166,7 @@ public class REPL {
               }
             }
             break;
+
             default:  // command unrecognized
               errorHandler.inputFormatException();
               break;
@@ -157,6 +175,8 @@ public class REPL {
       } catch (IOException | IllegalAccessException | NoSuchMethodException e) { // some kind of read error, so the repl exits
         errorHandler.parseInputException();
         break;
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
     try {

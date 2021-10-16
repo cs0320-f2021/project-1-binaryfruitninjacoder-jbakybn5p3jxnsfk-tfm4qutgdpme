@@ -3,8 +3,6 @@ package edu.brown.cs.student.main.ORM;
 
 import org.checkerframework.checker.regex.qual.Regex;
 
-import java.lang.reflect.Field;
-
 public class User {
   private int user_id;
   private double weight;

@@ -7,3 +7,4 @@ target/
 *.prefs
 .data/project-1
 *.sqlite3
+config/secret/*
