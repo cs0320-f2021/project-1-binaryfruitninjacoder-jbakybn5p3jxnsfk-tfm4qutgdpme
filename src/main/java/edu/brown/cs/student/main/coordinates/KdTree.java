@@ -1,7 +1,5 @@
 package edu.brown.cs.student.main.coordinates;
 
-
-
 import edu.brown.cs.student.main.node.Node;
 import edu.brown.cs.student.main.utils.Utils;
 
