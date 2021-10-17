@@ -7,15 +7,15 @@ import java.util.StringTokenizer;
 
 public class ClassifyHandler implements Handler {
     private String command = "";
-    private Database data;
+
 
 
     public ClassifyHandler(String command, Database loadedData) {
         this.command = command;
-        this.data = loadedData;
+
     }
 
-    public void handle() {
+    public void handle(String command) {
         String s = this.command;
         // initialize a StringTokenizer to help parse the input, broken by space or tabs
         StringTokenizer st = new StringTokenizer(s, " \t", false);
@@ -37,9 +37,9 @@ public class ClassifyHandler implements Handler {
         if (commandArray.length == 3) { //if the commands after similar are k and user id
             String id = commandArray[2]; //get argument id
             Integer idInt = Integer.valueOf(id); //change argument id to integer
-            List<INode> nearest = this.data.builtTree.findKNearest(this.data.idMap.get(idInt)); //find nearest list of INodes with the node that maps to id
+            List<INode> nearest = CommandHandler.loadedData.builtTree.findKNearest(CommandHandler.loadedData.idMap.get(idInt)); //find nearest list of INodes with the node that maps to id
             for (INode user : nearest) { //for every element in the list of INodes
-                String horoscope = this.data.horoscopeMap.get(this.data.userMap.get(user)); //use the user id to find horoscope
+                String horoscope = CommandHandler.loadedData.horoscopeMap.get(CommandHandler.loadedData.userMap.get(user)); //use the user id to find horoscope
                 Integer horoscopeCurrent = horoscopeCount.get(horoscope) + 1; //add one to the horoscope of the user
                 horoscopeCount.put(horoscope, horoscopeCurrent);  //update value
             }
@@ -57,9 +57,9 @@ public class ClassifyHandler implements Handler {
             double heightNum = ((Double.parseDouble(height.substring(0,1))) * 12) + Double.parseDouble(height.substring(1));
             double ageNum = Double.parseDouble(age); //age string to int
             ThreeDimNode userToCompareTo = new ThreeDimNode(weightNum, heightNum, ageNum); //create new user with correctly formatted numbers
-            List<INode> nearestUsers = this.data.builtTree.findKNearest(userToCompareTo);
+            List<INode> nearestUsers = CommandHandler.loadedData.builtTree.findKNearest(userToCompareTo);
             for (INode user : nearestUsers) { //for every element in the list of INodes
-                String horoscope = this.data.horoscopeMap.get(this.data.userMap.get(user)); //use the user id to find horoscope
+                String horoscope = CommandHandler.loadedData.horoscopeMap.get(CommandHandler.loadedData.userMap.get(user)); //use the user id to find horoscope
                 Integer horoscopeCurrent = horoscopeCount.get(horoscope) + 1;
                 horoscopeCount.put(horoscope, horoscopeCurrent);
             }

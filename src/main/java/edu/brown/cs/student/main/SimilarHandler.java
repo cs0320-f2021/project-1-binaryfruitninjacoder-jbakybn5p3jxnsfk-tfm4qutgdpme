@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
 
 public final class SimilarHandler {
-    private static String command = "";
+    private String command = "";
     private static Database data;
 
 
@@ -18,8 +19,8 @@ public final class SimilarHandler {
     }
 
 //String
-    public static String handle(String command) throws IOException, SQLException, ClassNotFoundException {
-        String s = command;
+    public static void handle(String commandPassed) throws IOException, SQLException, ClassNotFoundException {
+        String s = commandPassed;
         // initialize a StringTokenizer to help parse the input, broken by space or tabs
         StringTokenizer st = new StringTokenizer(s, " \t", false);
         String[] commandArray;
@@ -27,10 +28,10 @@ public final class SimilarHandler {
         if (commandArray.length == 3) { //cmd0 is command, cmd1 is k, cmd2 is id
             String id = commandArray[2]; //get argument id
             Integer idInt = Integer.valueOf(id); //argument id to integer
-            List<INode> nearest = data.builtTree.findKNearest(data.idMap.get(idInt)); //find nearest list of INodes
+            List<INode> nearest = CommandHandler.loadedData.builtTree.findKNearest(CommandHandler.loadedData.idMap.get(idInt)); //find nearest list of INodes
             //with idInt that maps to a node
             for (INode user : nearest) { //for every user(INode) in the list of INodes
-                System.out.println(data.userMap.get(user)); //use the user to id map to print the id's
+                System.out.println(CommandHandler.loadedData.userMap.get(user)); //use the user to id map to print the id's
             }
         }
         if (commandArray.length == 5) { //0 is command, 1 is k, 2 is weight, 3 height, 4 age
@@ -43,13 +44,12 @@ public final class SimilarHandler {
             double heightNum = ((Double.parseDouble(height.substring(0, 1))) * 12) + Double.parseDouble(height.substring(1));
             double ageNum = Double.parseDouble(age); //age string to int
             ThreeDimNode userToCompareTo = new ThreeDimNode(weightNum, heightNum, ageNum); //create new user with correctly formatted numbers
-            List<INode> nearestUsers = data.builtTree.findKNearest(userToCompareTo); //use built tree to findKNearest
+            List<INode> nearestUsers = CommandHandler.loadedData.builtTree.findKNearest(userToCompareTo); //use built tree to findKNearest
             for (INode user : nearestUsers) { //for every element in the returned list of INodes
-                System.out.println(data.userMap.get(user));
+                System.out.println(CommandHandler.loadedData.userMap.get(user));
             }
         } else {
             throw new RuntimeException("incorrect arguments");
         }
-        return "";
     }
 }

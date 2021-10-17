@@ -5,5 +5,5 @@ import java.sql.SQLException;
 
 public interface Handler {
 
-    public void handle() throws IOException, SQLException, ClassNotFoundException;
+    public void handle(String command) throws IOException, SQLException, ClassNotFoundException ;
 }

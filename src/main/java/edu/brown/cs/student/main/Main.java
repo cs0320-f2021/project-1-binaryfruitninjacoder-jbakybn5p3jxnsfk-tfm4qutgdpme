@@ -8,12 +8,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
@@ -48,7 +44,7 @@ public final class Main {
   }
 
   private String[] args;
-  REPL repl = new REPL(new HashMap<String, Handler>());
+  REPL repl = new REPL(new HashMap<String, Consumer<String>>());
 
   // stars array: [[starID: String, starName: String, X: String, Y: String, Z: String]]
   private ArrayList<String[]> stars;
@@ -63,7 +59,7 @@ public final class Main {
     this.args = args;
   }
 
-  private void run() {
+  private void run() throws SQLException, IOException, ClassNotFoundException {
 
 
     // set up parsing of command line flags
@@ -81,11 +77,32 @@ public final class Main {
       runSparkServer((int) options.valueOf("port"));
     }
 
-    // initialize a StarDistance object
-    //StarDistance distCalculator = new StarDistance();
-    Map<String, Function<String, String>> commandMap = new HashMap<String, Function<String, String>>(){{
-     put("similar",SimilarHandler::handle); }
-    };
+
+
+
+// ______________________________________ Siddarth's notes
+//    Map<String, Function<String, String>> commandMap = new HashMap<String, Function<String, String>>(){{
+//       put("similar", SimilarHandler::handle);
+//    }
+//    };
+
+//_________________________________Siddarth's notes with edits
+    //    Map<String, Function<String, String>> commandMap = new HashMap<String, Function<String, String>>(){{
+//      Function<String, String> similar = put("similar",
+//              SimilarHandler::handle);
+
+//    ________________________________________ Error : SimilarHandler should return a method(not sure why)
+//    Map<String, Consumer<String>> commandMap = new HashMap<String, Consumer<String>>();
+//    commandMap.put("similar", SimilarHandler.handle("similar"));
+
+    //___________________________________________ error: requires a character item
+    //todo: pass method as value in hashmap
+    Stack<Character> s = new Stack<>();
+    Map<String, Consumer<String>> commandMap = new HashMap<String, Consumer<String>>();
+      commandMap.put("similar", SimilarHandler.handle("similar") -> s.push('('));
+//    commandMap.put("classify", ClassifyHandler.handle("similar"));
+//    commandMap.put("command", CommandHandler.handle("similar"));
+
 
 
   }
