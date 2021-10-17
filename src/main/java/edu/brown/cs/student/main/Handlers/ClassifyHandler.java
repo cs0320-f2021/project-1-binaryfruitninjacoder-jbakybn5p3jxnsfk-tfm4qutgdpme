@@ -25,7 +25,7 @@ public class ClassifyHandler {
     StringTokenizer st = new StringTokenizer(s, " \t", false);
     String[] commandArray;
     commandArray = s.split(" ");
-    HashMap<String, Integer> horoscopeCount = new HashMap<String, Integer>(); //make an empty hashmap
+    HashMap<String, Integer> horoscopeCount = new HashMap<>(); //make an empty hashmap
     horoscopeCount.put("Aries", 0); //populate with initial horoscope values
     horoscopeCount.put("Taurus", 0);
     horoscopeCount.put("Gemini", 0);

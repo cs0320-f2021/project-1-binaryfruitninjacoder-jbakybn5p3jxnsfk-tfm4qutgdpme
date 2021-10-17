@@ -9,10 +9,11 @@ public class Teammate implements Coordinate<Integer> {
   private final Integer id;
   private final String name;
   private final int dim;
-  private final List<Double> metrics;
+  private final List<Integer> metrics;
+  private final List<Integer> reversedMetrics;
 
   public Teammate(Member member) {
-    List<Double> allCoords = new ArrayList<>();
+    List<Integer> allCoords = new ArrayList<>();
     // the coordinates array would have these dimensions in the order of:
     // yrs_Experience, commenting, algo,
     allCoords.add(member.getExperience());
@@ -25,6 +26,15 @@ public class Teammate implements Coordinate<Integer> {
     this.id = member.getId();
     this.name = member.getName();
     this.dim = allCoords.size();
+
+    List<Integer> allCoordsRev = new ArrayList<>();
+    allCoordsRev.add(member.getExperience());
+    allCoordsRev.add(10 - member.getCommenting());
+    allCoordsRev.add(10 - member.getAlgorithms());
+    allCoordsRev.add(10 - member.getOOP());
+    allCoordsRev.add(10 - member.frontend());
+    allCoordsRev.add(10 - member.getTesting());
+    this.reversedMetrics = allCoordsRev;
   }
 
 
@@ -36,6 +46,10 @@ public class Teammate implements Coordinate<Integer> {
    */
   @Override
   public Double getCoordinateVal(int dim) {
+    return null;
+  }
+
+  public int getIntCoordinateVal(int dim) {
     return this.metrics.get(dim);
   }
 
@@ -64,6 +78,14 @@ public class Teammate implements Coordinate<Integer> {
    */
   @Override
   public List<Double> getCoordinates() {
+    return null;
+  }
+
+  public List<Integer> getIntCoordinates() {
     return this.metrics;
+  }
+
+  public List<Integer> getIntRevCoordinates() {
+    return this.reversedMetrics;
   }
 }

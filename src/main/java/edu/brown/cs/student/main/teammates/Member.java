@@ -60,23 +60,23 @@ public class Member {
     return this.name;
   }
 
-  public double getCommenting() {
+  public int getCommenting() {
     return this.commenting;
   }
 
-  public double getTesting() {
+  public int getTesting() {
     return this.testing;
   }
 
-  public double getOOP() {
+  public int getOOP() {
     return this.OOP;
   }
 
-  public double getAlgorithms() {
+  public int getAlgorithms() {
     return this.algorithms;
   }
 
-  public double frontend() {
+  public int frontend() {
     return this.frontend;
   }
 
@@ -84,7 +84,7 @@ public class Member {
     return this.meeting;
   }
 
-  public double getExperience() {
+  public int getExperience() {
     return this.years_of_experience;
   }
 
