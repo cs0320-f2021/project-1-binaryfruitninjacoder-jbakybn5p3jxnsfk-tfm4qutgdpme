@@ -7,19 +7,19 @@ public class ErrorHandler {
   public ErrorHandler() {
   }
 
-  public void inputFormatException() {
-    System.out.println("INPUT ERROR: We couldn't process your input, please make sure your input is in the correct format!");
+  public static String inputFormatException() {
+    return "INPUT ERROR: We couldn't process your input, please make sure your input is in the correct format!";
   }
 
-  public void filePathException() {
-    System.out.println("FILE ERROR: The path you entered does not exist!");
+  public static String filePathException() {
+    return "FILE ERROR: The path you entered does not exist!";
   }
 
-  public void closeReaderException() {
-    System.out.println("ERROR: failed to close reader!");
+  public static String closeReaderException() {
+    return "ERROR: failed to close reader!";
   }
 
-  public void parseInputException() {
-    System.out.println("ERROR: couldn't parse your input...");
+  public static String parseInputException() {
+    return "ERROR: couldn't parse your input...";
   }
 }

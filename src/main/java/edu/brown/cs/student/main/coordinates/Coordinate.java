@@ -36,4 +36,6 @@ public interface Coordinate<T> {
    * @return a String representation of a Coordinate.
    */
   String toString();
+
+  int getIntCoordinateVal(int dim);
 }

@@ -118,7 +118,9 @@ public final class Main {
           {
             put("similar", SimilarHandler::handle);
             put("classify", ClassifyHandler::handle);
-            put("recsys_rec", RecommendHandler::handle);
+            put("recsys_rec", RecommendHandler::handleUser);
+            put("recsys_gen_groups", RecommendHandler::handleGroup);
+            //put("recsys_load responses", LoadHandler::handle);
           }
         };
 

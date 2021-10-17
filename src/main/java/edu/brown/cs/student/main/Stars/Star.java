@@ -97,6 +97,11 @@ public class Star implements Coordinate<Integer> {
         + '}';
   }
 
+  @Override
+  public int getIntCoordinateVal(int dim) {
+    return (int) Math.ceil(coordinates.get(dim - 1));
+  }
+
   /** Check if this Star is equal to the passed object.
    @param o Another object
    @return a Boolean ture/false if the objects are equal.
