@@ -2,10 +2,10 @@ package edu.brown.cs.student.main.main;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import edu.brown.cs.student.main.API.Interests;
-import edu.brown.cs.student.main.API.Negative;
-import edu.brown.cs.student.main.API.Positive;
-import edu.brown.cs.student.main.API.Skills;
+import edu.brown.cs.student.main.ORM.Interests;
+import edu.brown.cs.student.main.ORM.Negative;
+import edu.brown.cs.student.main.ORM.Positive;
+import edu.brown.cs.student.main.ORM.Skills;
 import edu.brown.cs.student.main.client.ApiClient;
 import edu.brown.cs.student.main.client.ClientRequestGenerator;
 
