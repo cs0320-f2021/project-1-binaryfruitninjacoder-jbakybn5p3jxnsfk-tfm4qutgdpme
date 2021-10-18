@@ -10,6 +10,7 @@ The data are retrieved from a user API and SQL user data, which are combined to 
 ### ⚙️ Design
 
 **Overall Architecture**
+
 Queries are passed into the system through command line, which are passed into our FileReader. The set of commands are stored 
 in a Hashmap mapping command string to a handler that handles te command and provide desired output. When user load the data of members,
 these information are processed through LoadHandler and stored in a global variable called AllMembers static class. Later on by calling getAllMembers method,
@@ -18,15 +19,19 @@ RecommendHandler is used to return a list of top k recommended members based on 
 based on the user queried. API and SQL data are loaded into the AllMembers through LoadHandler.
 
 **KD Tree Component**
+
 The KD Tree mainly takes the use of generics to generalize the application to multi-parameters nodes and multi-dimensional space when calculating the euclidean distance. In our implementation, the KD Tree is a class, INode an interface of a tree node in the KD Tree, and ThreeDimNode class as a class for nodes that have 3 dimensions. An alternative implementation approach is to create a generic interface for the KD Tree itself as well, which we did not have the time to implement just yet. Stay tuned for a more generic implementation in the coming days. Each node has a set of methods that could help find the euclidean distance between this node and another node. KD Tree has methods that construct a balanced tree taking the use of the quick select algorithm, which is called directly when parameters such as a list of nodes and the dimension are passed into the KD Tree constructor. It has methods `contains` that checks if a certain node is in the tree, and most importantly, it has the method KNNSearch looking for the K nearest Neighbors of a specific node.
 
 **ORM component**
+
 The ORM component reads sqlite files and turns all rows of data into Objects. The API component allows the same thing. Data collected using the ORM method gives us information about a user's interests, positive, negative, and skills, whereas the API method gives us information about their name, grade, years of experience, meeting time, preferred language etc. Inside a LoadHandler class, there is a for loop that goes through k users using the API data and then adds that information into k objects of the Member class. Similarly, all four ORM data classes will be looped through and have their info accessed by getters to add into the Member class. This is how we would approach it, but it isn’t the most efficient way to approach it. Then, we will add all the Members into the AllMembers class.
 
 **Generic REPL**
+
 Our REPL class is a hashmap object where Strings are keys and handler methods are values. The REPL class is static and contains one run method where a user input is a parameter that returns type void. The run method iterates through a hashmap determining if the command is recognized and calling the value methods if the command is present in the key set. The method called is a common method (handle) that is present in command handler classes which all implement a handler interface. Each command handler class is responsible for either loading data from api/orm sources or for making recommendations in specific output formats. The command handler classes all implement a handler interface that contains the same method handle where a string is a parameter and return type. The main class of the project instatites a REPL, puts known commands and methods into the hashmap, and calls the run REPL method.
 
 **Recommender Algorithm**
+
 Params to take: id, name, meeting, years_of_experience, interests, commenting, testing, OOP, algorithms, frontend
 
 Bloom filter (find similarity): meeting, interests
