@@ -13,7 +13,14 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
 
-import edu.brown.cs.student.main.Handlers.*;
+import edu.brown.cs.student.main.Handlers.ClassifyHandler;
+import edu.brown.cs.student.main.Handlers.GenHandler;
+import edu.brown.cs.student.main.Handlers.LoadHandler;
+import edu.brown.cs.student.main.Handlers.MathBot;
+import edu.brown.cs.student.main.Handlers.RecommendHandler;
+import edu.brown.cs.student.main.Handlers.SimilarHandler;
+import edu.brown.cs.student.main.Handlers.StarHandler;
+import edu.brown.cs.student.main.Handlers.UserHandler;
 import edu.brown.cs.student.main.ORM.Database;
 import edu.brown.cs.student.main.ORM.User;
 import freemarker.template.Configuration;
@@ -114,7 +121,7 @@ public final class Main {
             put("similar", SimilarHandler::handle);
             put("classify", ClassifyHandler::handle);
             put("recsys_rec", RecommendHandler::handleUser);
-            put("recsys_gen_groups", RecommendHandler::handleGroup);
+            put("recsys_gen_groups", GenHandler::handle);
             put("recsys_load responses", LoadHandler::handle);
           }
         };

@@ -52,7 +52,6 @@ public class REPL {
           String[] args = input.split(" ");
           if (commands.containsKey(args[0])) {
             String message;
-            // TODO (in the works atm)
             message = commands.get(args[0]).apply(...);
           }
           else {
