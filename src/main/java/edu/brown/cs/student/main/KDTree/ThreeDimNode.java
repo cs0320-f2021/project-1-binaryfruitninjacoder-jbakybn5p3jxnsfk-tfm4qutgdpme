@@ -1,11 +1,16 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.KDTree;
+
+import java.util.Comparator;
 
 public class ThreeDimNode implements INode {
 
-  private int dimensions;
-  private double[] coordinates;
+  public double[] coordinates;
   public ThreeDimNode left;
   public ThreeDimNode right;
+  private double euclideanDistanceAtt;
+  // lambda notation for implement method for threedimnode class
+  // .thenCompare()
+  public Comparator<ThreeDimNode> byEuclideanDistance = Comparator.comparing((ThreeDimNode n) -> n.euclideanDistanceAtt);
 
   public ThreeDimNode(double[] coordinates) {
     this.coordinates = coordinates;
@@ -16,19 +21,34 @@ public class ThreeDimNode implements INode {
   }
 
   @Override
-  public double get(int index) {
+  public double getValue(int index) {
     return coordinates[index];
   }
 
+  public double[] getCoordinates() {
+    return this.coordinates;
+  }
+
+  // USING COMPARATOR, defined on an object not a class -->
   @Override
-  public double euclideanDistance(INode node) {
+  public double getEuclideanDistance() {
+    return euclideanDistanceAtt;
+  }
+
+  public void setEuclideanDistance(INode node) {
     double dist = 0.0;
     ThreeDimNode otherNode = (ThreeDimNode) node;
     for (int i = 0; i < coordinates.length; i++) {
       double d = coordinates[i] - otherNode.coordinates[i];
       dist += d * d;
     }
-    return Math.sqrt(dist);
+    euclideanDistanceAtt = Math.sqrt(dist);
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    return super.equals(obj);
   }
 
   @Override
