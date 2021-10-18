@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
 
 import edu.brown.cs.student.main.Handlers.ClassifyHandler;
 import edu.brown.cs.student.main.Handlers.GenHandler;
+import edu.brown.cs.student.main.Handlers.LoadHandler;
 import edu.brown.cs.student.main.Handlers.MathBot;
 import edu.brown.cs.student.main.Handlers.RecommendHandler;
 import edu.brown.cs.student.main.Handlers.SimilarHandler;
@@ -121,7 +122,7 @@ public final class Main {
             put("classify", ClassifyHandler::handle);
             put("recsys_rec", RecommendHandler::handleUser);
             put("recsys_gen_groups", GenHandler::handle);
-            //put("recsys_load responses", LoadHandler::handle);
+            put("recsys_load responses", LoadHandler::handle);
           }
         };
 
