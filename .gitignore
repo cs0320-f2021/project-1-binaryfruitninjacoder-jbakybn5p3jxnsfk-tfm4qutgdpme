@@ -7,6 +7,6 @@ target/
 *.prefs
 .data/project-1
 *.sqlite3
-.src/main/java/edu.brown.cs.student.main/secret/
+.src/main/java/edu/brown/cs/student/main/secret/
 *.txt
 
