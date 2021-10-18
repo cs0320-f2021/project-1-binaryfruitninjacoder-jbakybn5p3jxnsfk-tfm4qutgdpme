@@ -10,16 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ClassifyHandler {
-  private String command = "";
-  private Database data;
 
-
-  public ClassifyHandler(String command, Database loadedData) {
-    this.command = command;
-    this.data = loadedData;
-  }
-
-  public static void handle() {
+  public static String handle(String command) {
     String s = command;
     // initialize a StringTokenizer to help parse the input, broken by space or tabs
     StringTokenizer st = new StringTokenizer(s, " \t", false);
@@ -71,9 +63,6 @@ public class ClassifyHandler {
         System.out.println(horoscopeString.getKey() + ":" + horoscopeString.getValue());
       }
     }
-  }
-
-  public static String handle(String s) {
     return "";
   }
 }

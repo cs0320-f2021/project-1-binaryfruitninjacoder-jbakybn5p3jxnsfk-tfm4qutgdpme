@@ -47,7 +47,7 @@ public class KdTree<T> {
       return new Node<>(null, null, null);
     } else {
       Comparator<Coordinate<T>> byDimension
-          = Comparator.comparingDouble(coordinate -> coordinate.getIntCoordinateVal(currentDim));
+          = Comparator.comparingDouble(coordinate -> coordinate.getCoordinateVal(currentDim));
 
       remainingCoordinates.sort(byDimension);
 

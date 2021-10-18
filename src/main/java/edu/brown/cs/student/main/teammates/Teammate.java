@@ -1,11 +1,12 @@
 package edu.brown.cs.student.main.teammates;
 
 import edu.brown.cs.student.main.coordinates.Coordinate;
+import edu.brown.cs.student.main.recommender.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Teammate implements Coordinate<Integer> {
+public class Teammate implements Coordinate<Integer>, Item {
   private final Integer id;
   private final String name;
   private final int dim;
@@ -46,11 +47,20 @@ public class Teammate implements Coordinate<Integer> {
    */
   @Override
   public Double getCoordinateVal(int dim) {
-    return null;
+    return (double) this.metrics.get(dim);
+  }
+
+  public Double getCoordinateInverseVal(int dim) {
+    return 10.0 - this.metrics.get(dim);
   }
 
   public int getIntCoordinateVal(int dim) {
     return this.metrics.get(dim);
+  }
+
+  @Override
+  public List<String> getVectorRepresentation() {
+    return null;
   }
 
   /**

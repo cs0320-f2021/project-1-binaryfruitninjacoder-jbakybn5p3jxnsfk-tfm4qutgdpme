@@ -1,6 +1,8 @@
 package edu.brown.cs.student.main.Handlers;
 
 import edu.brown.cs.student.main.ORM.Database;
+import edu.brown.cs.student.main.bloomfilter.BloomFilter;
+import edu.brown.cs.student.main.bloomfilter.BloomFilterRecommender;
 import edu.brown.cs.student.main.coordinates.Coordinate;
 import edu.brown.cs.student.main.coordinates.KdTree;
 import edu.brown.cs.student.main.searchAlgorithms.KdTreeSearch;
@@ -9,6 +11,7 @@ import edu.brown.cs.student.main.teammates.Member;
 import edu.brown.cs.student.main.teammates.Teammate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -31,12 +34,19 @@ public class RecommendHandler {
       for (Member member : allMembers.values()) {
         teammateList.add(new Teammate(member));
       }
-      // construct a KD Tree with teammateList
+      // construct a KD Tree with teammateList, select the top 2k that matches
       KdTree<Integer> kdTree = new KdTree<>(student.getDimension(), teammateList);
       KdTreeSearch<Integer> knnSearch = new KdTreeSearch<>();
       List<Coordinate<Integer>> top2KNN = knnSearch.getNearestNeighborsResult(top2K, student, kdTree.getRoot(), true);
-      List<Integer> idList = new ArrayList<>();
+      //apply bloom filter on the top2k Knn, pick top k
+      HashMap<String, Coordinate<Integer>> bloomfilterMap = new HashMap<>();
       for (Coordinate<Integer> neighbor : top2KNN) {
+        bloomfilterMap.put(neighbor.getId().toString(), new Teammate(allMembers.get(neighbor.getId())));
+      }
+      BloomFilterRecommender recommender = new BloomFilterRecommender(bloomfilterMap, 0.1);
+      List<Coordinate<Integer>> topK = recommender.getTopKRecommendations(student, numRecs);
+      List<Integer> idList = new ArrayList<>();
+      for (Coordinate<Integer> neighbor : topK) {
         idList.add(neighbor.getId());
       }
       return idList.toString();
@@ -46,14 +56,15 @@ public class RecommendHandler {
     }
   }
 
-  public static String handleGroup(String command) {
-    StringTokenizer st = new StringTokenizer(command, " \t", false);
-    String[] commandArray;
-    commandArray = command.split(" ");
-
-    if (commandArray.length == 2) {
-
-    }
-    return "";
-  }
+  // This is handled in GenHandler by grace
+//  public static String handleGroup(String command) {
+//    StringTokenizer st = new StringTokenizer(command, " \t", false);
+//    String[] commandArray;
+//    commandArray = command.split(" ");
+//
+//    if (commandArray.length == 2) {
+//
+//    }
+//    return "";
+//  }
 }
