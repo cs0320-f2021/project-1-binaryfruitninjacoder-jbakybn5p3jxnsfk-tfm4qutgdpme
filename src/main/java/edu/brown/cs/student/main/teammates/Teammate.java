@@ -12,6 +12,7 @@ public class Teammate implements Coordinate<Integer>, Item {
   private final int dim;
   private final List<Integer> metrics;
   private final List<Integer> reversedMetrics;
+  private final List<String> attributes;
 
   public Teammate(Member member) {
     List<Integer> allCoords = new ArrayList<>();
@@ -27,6 +28,10 @@ public class Teammate implements Coordinate<Integer>, Item {
     this.id = member.getId();
     this.name = member.getName();
     this.dim = allCoords.size();
+    List<String> attributes = new ArrayList<>();
+    attributes.add(member.getMeeting());
+    attributes.add(member.getInterests());
+    this.attributes = attributes;
 
     List<Integer> allCoordsRev = new ArrayList<>();
     allCoordsRev.add(member.getExperience());
@@ -60,7 +65,7 @@ public class Teammate implements Coordinate<Integer>, Item {
 
   @Override
   public List<String> getVectorRepresentation() {
-    return null;
+    return this.attributes;
   }
 
   /**
