@@ -25,6 +25,7 @@ public class CommandHandler {
     String[] commandArray;
     commandArray = s.split(" ");
     loadedData = new Database(commandArray[1]);
+
     loadedData.populateUserListAndMap(); //call method to populate hashMaps in database
   }
 

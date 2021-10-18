@@ -48,7 +48,7 @@ public class Database {
 //  }
 
   //method that inserts an object into the list
-  public static void insert(User u)
+  public void insert(User u)
       throws SQLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO users (user_id, weight, bust_size, height, age, body_type, horoscope) VALUES (?)"
       );
@@ -69,7 +69,7 @@ public class Database {
       prep.close();
     }
 
-    public static void delete(User u) throws SQLException, IllegalAccessException {
+    public void delete(User u) throws SQLException, IllegalAccessException {
      // alternatively, I can use the DELETE FROM table_name WHERE condition;
       PreparedStatement prep = conn.prepareStatement("DELETE FROM users (user_id, weight, bust_size, height, age, body_type, horoscope) VALUES (?)");
       StringBuilder values = new StringBuilder();
@@ -85,7 +85,7 @@ public class Database {
       prep.close();
     }
 
-    public void where(String field, String fieldValue) throws SQLException {
+    public List<User> where(String field, String fieldValue) throws SQLException {
       PreparedStatement prep = conn.prepareStatement("SELECT * FROM users WHERE " + field + " = " + fieldValue);
       ResultSet rs = prep.executeQuery();
       if (!rs.isClosed()) {
@@ -97,6 +97,7 @@ public class Database {
       }
       rs.close();
       prep.close();
+      return UserList;
     }
 
   public void rowToUser() throws SQLException {
@@ -119,7 +120,7 @@ public class Database {
       prep.close();
     }
 
-    public static void sql(String sql)
+    public void sql(String sql)
         throws SQLException, NoSuchMethodException, IllegalAccessException, ClassNotFoundException {
       String[] sqlSplit = sql.split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
       for (String ss : sqlSplit){
@@ -161,8 +162,8 @@ public class Database {
   }
 
 
-//
-//
+
+
 //package edu.brown.cs.student.main.ORM;
 //
 //import java.lang.reflect.Field;

@@ -27,4 +27,32 @@ public class ClientRequestGenerator {
               .build();
     return request;
   }
+
+  /**
+   * Similar to the secured GET request, but is a POST request instead.
+   *
+   * @param param - the body of the POST request. This should be your name, passed in from the REPL.
+   * @return an HttpRequest object for accessing and posting to the secured resource.
+   */
+  public static HttpRequest getSecuredPostRequest(String param) {
+    String reqUri = "https://runwayapi.herokuapp.com/integration";
+
+    // The body of this POST request must include your auth code as a json: {"auth": "<cs-login>"}.
+
+    //make a json of auth: cs-login
+  //  JSONObject jsonObj = new JSONObject();
+
+    String apiKey = ClientAuth.getApiKey();
+    ////Loaded Recommender with k students.
+
+    // TODO build and return a new POST HttpRequest with an apikey.txt key header, and the param in the body.
+    // Hint: the POST param should be: HttpRequest.BodyPublishers.ofString("{\"name\":\"" + param + "\"}")
+    HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(reqUri))
+            .header("x-api-key", apiKey)
+            .POST(HttpRequest.BodyPublishers.ofString("{\"name\":\"" + param + "\"}"))
+            .build();
+    return request;
+  }
+
 }
